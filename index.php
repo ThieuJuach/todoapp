@@ -97,10 +97,7 @@
                                             error_reporting(E_ALL);
                                             ini_set('display_errors', 1);
 
-                                            try {
-                                                // Establish connection to SQL Server on Azure
-                                                $conn = new PDO("sqlsrv:server = tcp:atj.database.windows.net,1433; Database=todo", "ajuach", "Andy.664298");
-                                                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                            include('config.php');
 
                                                 // Query to retrieve data from tasks table
                                                 $sql = "SELECT * FROM tasks";
@@ -127,11 +124,6 @@
                                                 } else {
                                                     echo "<tr><td colspan='8'>No data available</td></tr>";
                                                 }
-                                            } catch (PDOException $e) {
-                                                // Display error message if connection or query fails
-                                                echo "Error: " . $e->getMessage();
-                                            }
-
                                             // Close connection
                                             $conn = null;
                                             ?>
