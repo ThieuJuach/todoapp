@@ -63,4 +63,4 @@ jobs:
           app-name: 'Juach'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_197D218BDBA44C39A4FA8DA8C9EFF024 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_666C5F0BCC3046AE8051D2090E183D24 }}
