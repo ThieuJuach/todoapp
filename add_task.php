@@ -1,29 +1,34 @@
 <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-    
-    include 'config.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    // Check if form is submitted
-    if (isset($_POST['add'])) {
-        // Retrieve form data
-        $taskID = $_POST['task_id'];
-        $taskDescription = $_POST['task_description'];
-        $date = $_POST['date'];
-        
+include 'config.php';
+
+// Check if form is submitted
+if (isset($_POST['add'])) {
+    // Retrieve form data
+    $taskID = $_POST['task_id'];
+    $taskDescription = $_POST['task_description'];
+    $date = $_POST['date'];
+
+    try {
         // Prepare insert statement
-        $sql = "INSERT INTO tasks (task_id, task_description, status, date) VALUES ('$taskID', '$taskDescription', 'Pending', '$date')";
+        $sql = "INSERT INTO tasks (task_id, task_description, status, date) VALUES (:task_id, :task_description, 'Pending', :date)";
         
-        // Execute query
-        if (mysqli_query($conn, $sql)) {
-            echo "Task added successfully!";
-            header("Location: index.php");
-            exit();
-        } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        }
-        
-        // Close connection
-        mysqli_close($conn);
+        // Prepare and execute the statement
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':task_id', $taskID);
+        $stmt->bindParam(':task_description', $taskDescription);
+        $stmt->bindParam(':date', $date);
+        $stmt->execute();
+
+        echo "Task added successfully!";
+        header("Location: index.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
+}
+
+// Close connection (PDO automatically closes connections)
 ?>

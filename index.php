@@ -1,8 +1,14 @@
 <?php
-  include 'config.php';
+try {
+    $conn = new PDO("sqlsrv:server = tcp:atj.database.windows.net,1433; Database = todo", "ajuach", "Andy.664298");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    print("Error connecting to SQL Server.");
+    die(print_r($e));
+}
 
-  $sql = "SELECT * FROM tasks";
-  $result = $conn->query($sql);
+$sql = "SELECT * FROM tasks";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -99,29 +105,28 @@
                                       </tr>
                                   </thead>
                                   <tbody>
-                                  <?php
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            echo "<tr>";
-                                            echo '<td>' . htmlspecialchars($row['task_id']) . '</td>';
-                                            echo '<td>' . htmlspecialchars($row['task_description']) . '</td>';
-                                            echo '<td>' . htmlspecialchars($row['status']) . '</td>';
-                                            echo '<td>' . htmlspecialchars($row['date']) . '</td>';
-                                            echo "<td>";
-                                            if ($row['status'] != "Done") {
-                                                echo "<a style='margin: 5px;' href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
-                                                echo "<a style='margin: 5px;' href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
+                                            <?php
+                                            if ($result->rowCount() > 0) {
+                                                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                    echo "<tr>";
+                                                    echo '<td>' . htmlspecialchars($row['task_id']) . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['task_description']) . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['status']) . '</td>';
+                                                    echo '<td>' . htmlspecialchars($row['date']) . '</td>';
+                                                    echo "<td>";
+                                                    if ($row['status'] != "Done") {
+                                                        echo "<a style='margin: 5px;' href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
+                                                        echo "<a style='margin: 5px;' href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
+                                                    }
+                                                    echo "<a style='margin: 5px;' href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='8'>No data available</td></tr>";
                                             }
-                                            echo "<a style='margin: 5px;' href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
-                                            echo "</td>";
-                                            echo "</tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='8'>No data available</td></tr>";
-                                    }
-                                    
-                                    ?>
-                                  </tbody>
+                                            ?>
+                                        </tbody>
                             </table>
                         </div>
                     </div>

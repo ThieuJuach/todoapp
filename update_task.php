@@ -1,27 +1,30 @@
 <?php
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    include "config.php";
+include "config.php";
 
-    // Check if task_id is provided in the URL
-    if (isset($_GET['task_id'])) {
-        // Retrieve task_id from URL parameter
-        $taskID = $_GET['task_id'];
-        
+// Check if task_id is provided in the URL
+if (isset($_GET['task_id'])) {
+    // Retrieve task_id from URL parameter
+    $taskID = $_GET['task_id'];
+
+    try {
         // Prepare update statement
-        $sql = "UPDATE tasks SET status = 'Done' WHERE task_id = '$taskID'";
+        $sql = "UPDATE tasks SET status = 'Done' WHERE task_id = :task_id";
         
-        // Execute update query
-        if (mysqli_query($conn, $sql)) {
-            header("location: index.php");
-        } else {
-            echo "Error updating task status: " . mysqli_error($conn);
-        }
-        
-        // Close connection
-        mysqli_close($conn);
-    } else {
-        echo "Task ID not provided!";
+        // Prepare and execute the statement
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':task_id', $taskID);
+        $stmt->execute();
+
+        // Redirect to index.php after successful update
+        header("location: index.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Error updating task status: " . $e->getMessage();
     }
+} else {
+    echo "Task ID not provided!";
+}
 ?>
