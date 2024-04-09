@@ -114,10 +114,10 @@
                                                         echo "<td>{$row['date']}</td>";
                                                         echo "<td colspan='3' class='action'>";
                                                         if ($row['status'] != "Done") {
-                                                            echo "<a href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
-                                                            echo "<a href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
+                                                            echo "<a style='margin: 8px;' href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
+                                                            echo "<a style='margin: 8px;' href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
                                                         }
-                                                        echo "<a href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
+                                                        echo "<a style='margin: 8px;' href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
                                                         echo "</td>";
                                                         echo "</tr>";
                                                         $count++;
