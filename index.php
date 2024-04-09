@@ -1,15 +1,3 @@
-<?php
-try {
-    $conn = new PDO("sqlsrv:server = tcp:atj.database.windows.net,1433; Database = todo", "ajuach", "Andy.664298");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    print("Error connecting to SQL Server.");
-    die(print_r($e));
-}
-
-$sql = "SELECT * FROM tasks";
-$result = $conn->query($sql);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -105,7 +93,19 @@ $result = $conn->query($sql);
                                       </tr>
                                   </thead>
                                   <tbody>
-                                            <?php
+                                            <?php                                            
+                                            try {
+                                                $conn = new PDO("sqlsrv:server = tcp:atj.database.windows.net,1433; Database = todo", "ajuach", "Andy.664298");
+                                                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                            } catch (PDOException $e) {
+                                                print("Error connecting to SQL Server.");
+                                                die(print_r($e));
+                                            }
+                                            
+                                            $sql = "SELECT * FROM tasks";
+                                            $result = $conn->query($sql);
+                                            
+                                            
                                             if ($result->rowCount() > 0) {
                                                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                                                     echo "<tr>";
