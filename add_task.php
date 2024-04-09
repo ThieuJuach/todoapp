@@ -22,7 +22,6 @@ if (isset($_POST['add'])) {
         $stmt->bindParam(':date', $date);
         $stmt->execute();
 
-        echo "Task added successfully!";
         header("Location: index.php");
         exit();
     } catch (PDOException $e) {
