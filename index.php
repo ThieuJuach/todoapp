@@ -99,30 +99,33 @@
 
                                             include('config.php');
 
-                                                // Query to retrieve data from tasks table
-                                                $sql = "SELECT * FROM tasks";
-                                                $result = $conn->query($sql);
-
-                                                // Check if there are rows returned
-                                                if ($result->rowCount() > 0) {
-                                                    // Loop through each row and display data
-                                                    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                               // Fetch tasks from the database
+                                                $stmt = $conn->query("SELECT * FROM tasks ORDER BY task_id ASC");
+                                                
+                                                // Check if the query was successful
+                                                if ($stmt !== false) {
+                                                    $count = 1;
+                                                    // Loop through the result set and display each task
+                                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                         echo "<tr>";
-                                                        echo '<td>' . htmlspecialchars($row['task_id']) . '</td>';
-                                                        echo '<td>' . htmlspecialchars($row['task_description']) . '</td>';
-                                                        echo '<td>' . htmlspecialchars($row['status']) . '</td>';
-                                                        echo '<td>' . htmlspecialchars($row['date']) . '</td>';
-                                                        echo "<td>";
+                                                        echo "<td>{$row['task_id']}</td>";
+                                                        echo "<td>{$row['task_description']}</td>";
+                                                        echo "<td>{$row['status']}</td>";
+                                                        echo "<td>{$row['date']}</td>";
+                                                        echo "<td colspan='3' class='action'>";
                                                         if ($row['status'] != "Done") {
-                                                            echo "<a style='margin: 5px;' href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
-                                                            echo "<a style='margin: 5px;' href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
+                                                            echo "<a href='update_task.php?task_id={$row['task_id']}' class='btn-completed'>Mark as Done</a>";
+                                                            echo "<a href='edit_task.php?task_id={$row['task_id']}' class='btn-completed'>Edit</a>";
                                                         }
-                                                        echo "<a style='margin: 5px;' href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
+                                                        echo "<a href='delete_task.php?task_id={$row['task_id']}' class='btn-remove'>Delete</a>";
                                                         echo "</td>";
                                                         echo "</tr>";
+                                                        $count++;
                                                     }
                                                 } else {
-                                                    echo "<tr><td colspan='8'>No data available</td></tr>";
+                                                    // Display an error message if the query failed
+                                                    $errorInfo = $conn->errorInfo();
+                                                    echo "<tr><td colspan='5'>Failed to fetch tasks. Error: {$errorInfo[2]}</td></tr>";
                                                 }
                                             // Close connection
                                             $conn = null;
